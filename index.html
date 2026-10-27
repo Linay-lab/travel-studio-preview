@@ -193,7 +193,7 @@ html,body,button,input,select,textarea,option,table,th,td,nav,aside,main,.brand,
 .cover-position-field .cover-crop-shell{display:block!important;box-sizing:border-box!important;width:min(100%,440px)!important;max-width:440px!important;min-width:0!important;margin:12px auto!important}
 .cover-position-field #coverPositionPreview{display:block!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;height:auto!important;aspect-ratio:7/3!important;min-height:160px!important;position:relative!important;overflow:hidden!important}
 .cover-position-field #coverCropImage{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:100%!important;background-repeat:no-repeat!important;background-color:#dcecf7!important}
-</style><style>.cover-move-speed{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}.cover-move-speed label{margin:0}.cover-move-speed select{max-width:220px;padding:9px;border:1px solid #c7daea;border-radius:9px;background:white;color:#21486d}</style><script type="text/javascript" nonce="8633e58a814843e9919600516ca" src="//local.adguard.org?ts=1793110732825&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_00000000ad7481f8a3c16f24f2ce6239%26fn%3Dtravel-studio-v33-browser-back.html%26cd%3Dattachment%26ts%3D498088%26p%3Dfs%26cid%3D1%26sig%3D7bbdbaa2b3b5fe6325a77c86f7be2625d43c1c48bb4e9349643868a30010dccf%26v%3D0&amp;app=chrome.exe&amp;css=2&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script><script type="text/javascript" nonce="8633e58a814843e9919600516ca" src="//local.adguard.org?ts=1793110732825&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;type=user-script"></script></head><body><aside><div class="brand">旅購<small>TRAVEL STUDIO · V33 測試版</small></div><nav id="nav"></nav><div class="notice">獨立 Beta 測試版<br>資料儲存在此瀏覽器，不會更動正式網站。</div><button class="beta-logout" onclick="betaLogout()">↪ 登出測試版</button></aside><main id="app"></main><button id="mobileProfile" type="button" onclick="go('profile')" aria-label="個人中心">♙</button><div class="bottom" id="bottom"></div><div id="overlay"></div><div id="authRoot"></div><script>
+</style><style>.cover-move-speed{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}.cover-move-speed label{margin:0}.cover-move-speed select{max-width:220px;padding:9px;border:1px solid #c7daea;border-radius:9px;background:white;color:#21486d}</style></head><body><aside><div class="brand">旅購<small>TRAVEL STUDIO · V33 測試版</small></div><nav id="nav"></nav><div class="notice">獨立 Beta 測試版<br>資料儲存在此瀏覽器，不會更動正式網站。</div><button class="beta-logout" onclick="betaLogout()">↪ 登出測試版</button></aside><main id="app"></main><button id="mobileProfile" type="button" onclick="go('profile')" aria-label="個人中心">♙</button><div class="bottom" id="bottom"></div><div id="overlay"></div><div id="authRoot"></div><script>
 const KEY='travel_studio_beta_v3';const seed={trips:[{id:'t1',name:'沖繩旅行',country:'日本',city:'沖繩',start:'2026-09-13',end:'2026-09-17',budget:30000,notes:'海邊、自駕與伴手禮'}],items:[{id:'i1',name:'沖繩紅芋塔',type:'商品',country:'日本',city:'沖繩',place:'御菓子御殿',price:1200,currency:'JPY',qty:2,recipient:'家人',category:'送禮',note:'記得看保存期限',trip:'t1',bought:false,source:'',image:''},{id:'i2',name:'黑糖伴手禮',type:'商品',country:'日本',city:'沖繩',place:'國際通',price:850,currency:'JPY',qty:1,recipient:'自己',category:'自用',note:'',trip:'t1',bought:true,source:'',image:''},{id:'i3',name:'福岡咖啡廳',type:'餐廳',country:'日本',city:'福岡',place:'',price:0,currency:'JPY',qty:1,recipient:'',category:'自用',note:'下次旅行想去',trip:'',bought:false,source:'',image:''}],expenses:[{id:'e1',trip:'t1',name:'交通費',amount:1800,currency:'TWD',payer:'自己',date:'2026-09-13'}],plans:[{id:'p1',trip:'t1',date:'2026-09-13',time:'15:00',name:'抵達沖繩',place:'那霸機場',note:''}],info:[]};let data;try{data=JSON.parse(localStorage.getItem(KEY))||structuredClone(seed)}catch{data=structuredClone(seed)};for(let k of Object.keys(seed))if(!Array.isArray(data[k]))data[k]=[];let page='trips',tripId=data.trips[0]?.id||'',filter='',query='',modal='',editId='',method='manual';const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6),save=()=>{try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch{alert('瀏覽器儲存空間不足，請改用較小圖片或先匯出備份');return false}};function safeUrl(v){try{let u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}}const navs=[['trips','✈ 我的旅行'],['library','♡ 收藏庫'],['shopping','▣ 購物清單'],['plans','▤ 行程規劃'],['wallet','◈ 旅行錢包'],['info','⌁ 旅行資訊'],['profile','♙ 個人中心']];let libraryCategory='全部';
 let tripFilter='all', tripScope='all', libraryLayout='grid';
 function go(p,t){page=p==='home'?'trips':p;if(t){tripId=t;tripScope=t}else if(['shopping','plans','wallet','info'].includes(p)){tripScope='all'}query='';filter='';if(p==='library')libraryCategory='全部';if(['overview','shopping','plans','wallet','info'].includes(p)&&!data.trips.length){page='trips'}render()}function goFromOverview(p){go(p,tripId)}function current(){return data.trips.find(x=>x.id===tripId)||null}function money(v,c='TWD'){return `${c} ${Number(v||0).toLocaleString()}`}function tripSelect(value=''){return `<select name="trip"><option value="">不加入旅行（收藏庫）</option>${data.trips.map(t=>`<option value="${esc(t.id)}" ${t.id===value?'selected':''}>${esc(t.name)}</option>`).join('')}</select>`}function pageHeader(title,subtitle,button='',action=''){return `<div class="top"><div><h1>${title}</h1><div class="muted">${subtitle}</div></div>${button?`<button class="btn primary" onclick="${action}">${button}</button>`:''}</div>`}function tripbar(){return `<div class="scopebar"><span>查看</span><select aria-label="選擇旅行範圍" onchange="setTripScope(this.value)"><option value="all" ${tripScope==='all'?'selected':''}>全部旅行</option>${data.trips.map(t=>`<option value="${esc(t.id)}" ${tripScope===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></div>`}function setTripScope(v){tripScope=v;if(v!=='all')tripId=v;query='';filter='';render()}function requireTrip(kind){if(tripScope==='all'){alert('請先在上方選擇要新增資料的旅行');return}tripId=tripScope;openModal(kind)}function home(){let t=current();return `<div class="v4-homehero"><div><span class="pill">旅購 · TRAVEL STUDIO</span><h1>把喜歡的世界，<br>慢慢收進來。</h1><p>想買的，旅途中別再錯過。收藏喜歡的商品、景點與美食，不用先建立旅行。</p><div class="actions"><button class="btn primary" onclick="openModal('item')">＋ 快速收藏</button><button class="btn" onclick="go('trips')">查看我的旅行</button></div></div><div class="v4-homeart">✈️<br>🧳 📷</div></div><div class="statgrid"><div class="stat">我的旅行<b>${data.trips.length}</b></div><div class="stat">收藏總數<b>${data.items.length}</b></div><div class="stat">待購商品<b>${data.items.filter(x=>x.type==='商品'&&!x.bought).length}</b></div><div class="stat">已購商品<b>${data.items.filter(x=>x.type==='商品'&&x.bought).length}</b></div></div><div class="section row"><h2>即將出發的旅行</h2><button class="btn" onclick="go('trips')">查看全部</button></div>${t?`<div class="v4-tripgrid">${tripCard(t)}</div>`:'<div class="empty">尚無旅行，也可以先使用收藏庫。</div>'}<div class="section row"><h2>最近收藏</h2><button class="btn" onclick="go('library')">查看全部</button></div>${cards([...data.items].reverse().slice(0,4))}` }
@@ -341,7 +341,7 @@ authView();
       <label for="feedbackContact">補充說明（選填）</label>
       <input id="feedbackContact" name="contact" maxlength="200" placeholder="例如：希望按鈕放在右上角">
       <div class="feedback-actions">
-        <button type="submit" class="primary">儲存這筆回饋</button>
+        <button type="submit" class="primary">送出回饋（Email）</button>
         <button type="button" onclick="closeFeedback()">先繼續體驗</button>
       </div>
       <div id="feedbackStatus" class="feedback-success" role="status"></div>
@@ -351,7 +351,7 @@ authView();
       <h3 style="margin:0;color:#173d66">已記錄的建議（<span id="feedbackCount">0</span>）</h3>
       <button class="feedback-close" type="button" onclick="exportFeedback()">匯出回饋 JSON</button>
     </div>
-    <p class="sub">目前只儲存在這台裝置的瀏覽器，不會自動傳送給開發者。體驗結束後請匯出檔案分享。</p>
+    <p class="sub">回饋會先保留在本機；設定接收網址後才會寄送 Email。若網路傳送失敗，可匯出 JSON 備份。</p>
     <div id="feedbackList"></div>
   </section>
 </div>
@@ -371,16 +371,32 @@ authView();
   el('feedbackText').focus();
  };
  window.closeFeedback=function(){el('feedbackLayer').hidden=true};
- window.saveFeedback=function(e){
+ // 貼上 Apps Script 部署後的 Web App /exec 網址
+ const FEEDBACK_ENDPOINT='https://script.google.com/macros/s/AKfycbygoHggwPaGyQQ-EwlzgG_Y1KxkeeFqhj3zR34I2z25NHtdlBW6vObMvpu3b9zSClRD/exec';
+ window.saveFeedback=async function(e){
   e.preventDefault();
   const content=el('feedbackText').value.trim();
   if(!content)return;
-  const list=getItems();
-  list.unshift({id:Date.now()+'-'+Math.random().toString(36).slice(2,8),page:el('feedbackPage').value,kind:el('feedbackKind').value,content,extra:el('feedbackContact').value.trim(),createdAt:new Date().toISOString()});
+  const entry={id:Date.now()+'-'+Math.random().toString(36).slice(2,8),page:el('feedbackPage').value,kind:el('feedbackKind').value,content,extra:el('feedbackContact').value.trim(),createdAt:new Date().toISOString(),delivery:'local'};
+  const list=getItems();list.unshift(entry);
   try{localStorage.setItem(K,JSON.stringify(list))}
-  catch{el('feedbackStatus').textContent='儲存失敗：瀏覽器儲存空間可能不足，請先複製文字備份。';return}
+  catch{el('feedbackStatus').textContent='儲存失敗：請複製文字備份。';return}
   el('feedbackText').value='';el('feedbackContact').value='';
-  el('feedbackStatus').textContent='✓ 已記錄！你可以關閉視窗繼續操作。';
+  refreshFeedback();
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(FEEDBACK_ENDPOINT)){
+   el('feedbackStatus').textContent='✓ 已保存在本機。尚未設定 Email 接收網址，請先完成串接。';
+   return;
+  }
+  el('feedbackStatus').textContent='已保存在本機，正在送出…';
+  try{
+   const params=new URLSearchParams({id:entry.id,page:entry.page,kind:entry.kind,content:entry.content,extra:entry.extra,createdAt:entry.createdAt,website:location.href,trap:''});
+   await fetch(FEEDBACK_ENDPOINT,{method:'POST',mode:'no-cors',body:params,redirect:'follow'});
+   entry.delivery='submitted_unverified';
+   localStorage.setItem(K,JSON.stringify(list));
+   el('feedbackStatus').textContent='✓ 已送出傳送請求。請到接收信箱確認；因跨網域限制，網站無法直接驗證寄信成功。';
+  }catch(err){
+   el('feedbackStatus').textContent='⚠ 網路傳送失敗，內容已保存在本機，可稍後重新填寫或匯出備份。';
+  }
   refreshFeedback();
  };
  window.deleteFeedback=function(id){
