@@ -53,16 +53,25 @@ jobs:
           cache: npm
       - name: Install test dependencies
         run: npm ci
+      - name: Audit dependency advisories
+        run: npm audit --audit-level=high
       - name: Install browser and operating system dependencies
         run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Test desktop or mobile browser
         run: npm test
+      - name: Isolated concurrent browser load test
+        if: matrix.name == 'desktop-chromium' && github.event_name != 'workflow_run' && inputs.target != 'published'
+        run: npm run test:load
+      - name: Build combined HTML report
+        if: always()
+        run: node tests/build-report.cjs
       - name: Add readable run summary
         if: always()
         run: |
           node - <<'JS'
           const fs = require('fs');
           const file = 'test-results/results.json';
+          const extra = fs.existsSync('test-results/full-' + process.env.TEST_BROWSER + '.json') ? JSON.parse(fs.readFileSync('test-results/full-' + process.env.TEST_BROWSER + '.json', 'utf8')).results : [];
           const lines = ['## 旅購測試機器人', '', '瀏覽器：' + process.env.TEST_BROWSER, '', '測試對象：' + (process.env.TEST_TARGET_URL || '本次分支程式'), ''];
           if (fs.existsSync(file)) {
             const report = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -74,6 +83,8 @@ jobs:
           } else {
             lines.push('未產生測試報告，請檢查依賴安裝或瀏覽器啟動步驟。');
           }
+          for (const result of extra) lines.push('- ' + (result.status === 'PASS' ? '✅ ' : '❌ ') + result.name);
+          if (fs.existsSync('test-results/load-isolated.json')) lines.push('', '已完成隔離環境多人負載測試，詳見附件 load-isolated.json；不代表正式網站容量。');
           lines.push('', '下載本次執行的 browser-report 附件，開啟 index.html 可查看報告及截圖。', '', '測試使用獨立瀏覽器資料；回饋請求已攔截，不寄信。');
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\n'));
           JS

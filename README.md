@@ -16,3 +16,7 @@
 ## 自動測試機器人
 
 [操作說明](docs/TEST-BOT.md)：更新程式、提出 PR 或 Pages 發布成功後自動測試；也可在 GitHub Actions 手動執行，下載 HTML 報告及截圖。
+
+## 完整功能及安全檢查
+
+[完整檢查報告](docs/FULL-AUDIT.md) · [原始測試證據](docs/AUDIT-EVIDENCE.json)。已補強文字注入與備份驗證；仍為本機 Beta，沒有真實會員後端，不能宣稱零外洩或任意人數穩定。

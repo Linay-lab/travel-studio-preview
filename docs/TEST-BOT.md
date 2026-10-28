@@ -49,3 +49,7 @@ npm test
 
 - https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
 - https://playwright.dev/docs/ci
+
+## 完整功能／前端安全與多人測試擴充
+
+新增 full-site.cjs 的 18 組流程與錯誤邊界、source-audit.cjs 的來源檢查、依賴公告審查，以及只在 localhost 執行的 5／10／25 個並行瀏覽器操作。完整範圍與未完成的正式會員／後端條件見 [FULL-AUDIT.md](FULL-AUDIT.md)。這不是零漏洞保證，也不能代表 GitHub Pages 或 Apps Script 的正式承載量。

@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-28",
+  "baseCommit": "627cb0a788cc7bf8d8143df6fa8361345396a84a",
+  "localFunctionalResults": [
+    {
+      "browser": "desktop-chromium",
+      "passed": 18,
+      "failed": 0
+    },
+    {
+      "browser": "mobile-chromium",
+      "passed": 18,
+      "failed": 0
+    }
+  ],
+  "isolatedLoad": {
+    "generatedAt": "2026-10-28T01:09:13.434Z",
+    "target": "isolated localhost only",
+    "limits": "Not a test of GitHub Pages hosting capacity, Apps Script quotas, shared authentication, API throughput or database isolation.",
+    "results": [
+      {
+        "simultaneousUsers": 5,
+        "completed": 5,
+        "errors": [],
+        "totalMs": 701,
+        "p50Ms": 590,
+        "p95Ms": 697,
+        "maxMs": 697
+      },
+      {
+        "simultaneousUsers": 10,
+        "completed": 10,
+        "errors": [],
+        "totalMs": 1244,
+        "p50Ms": 972,
+        "p95Ms": 1236,
+        "maxMs": 1236
+      },
+      {
+        "simultaneousUsers": 25,
+        "completed": 25,
+        "errors": [],
+        "totalMs": 2777,
+        "p50Ms": 2383,
+        "p95Ms": 2769,
+        "maxMs": 2774
+      },
+      {
+        "datasetItems": 1000,
+        "renderAndSearchMs": 72,
+        "budgetMs": 3000
+      }
+    ]
+  },
+  "dependencyAdvisories": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "sourceChecks": {
+    "generatedAt": "2026-10-28T01:09:40.980Z",
+    "limits": "Pattern scan is not a full secret audit, server review or penetration test. Public Apps Script deployment URL is intentionally present, not a secret credential.",
+    "checks": [
+      {
+        "name": "常見秘密格式：privateKey",
+        "status": "PASS"
+      },
+      {
+        "name": "常見秘密格式：githubToken",
+        "status": "PASS"
+      },
+      {
+        "name": "常見秘密格式：awsAccessKey",
+        "status": "PASS"
+      },
+      {
+        "name": "常見秘密格式：serviceRole",
+        "status": "PASS"
+      },
+      {
+        "name": "沒有第三方JavaScript script src",
+        "status": "PASS"
+      },
+      {
+        "name": "既有Google Apps Script回饋程式未改動",
+        "status": "PASS"
+      }
+    ]
+  }
+}
