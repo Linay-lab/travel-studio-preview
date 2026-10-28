@@ -569,9 +569,9 @@ render();
   function close(){if(dialog){dialog.remove();dialog=null;}}
   function open(itemId){
     close();
-    const item=(window.data&&window.data.items||[]).find(x=>String(x.id)===String(itemId));
+    const item=(data&&data.items||[]).find(x=>String(x.id)===String(itemId));
     if(!item)return;
-    const trip=(window.data.trips||[]).find(t=>t.id===item.trip)||{};
+    const trip=(data.trips||[]).find(t=>t.id===item.trip)||{};
     dialog=document.createElement('div');dialog.className='modalwrap';dialog.setAttribute('role','presentation');
     const panel=document.createElement('section');panel.className='modal';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label','幫我找店家');
     panel.innerHTML='<header><h2>幫我找店家</h2><button type="button" class="btn" data-close>關閉</button></header>'+
@@ -594,17 +594,17 @@ render();
     panel.querySelector('[name=product]').focus();
   }
   function install(){
-    if(typeof window.render!=='function'||typeof window.data==='undefined')return;
+    if(typeof window.render!=='function'||typeof data==='undefined')return;
     const original=window.render;
     window.render=function(){
       original.apply(this,arguments);
-      if(window.page!=='shopping')return;
+      if(page!=='shopping')return;
       const app=document.getElementById('app');if(!app||app.querySelector('[data-tripin-find]'))return;
       const wrap=document.createElement('div');wrap.className='panel';wrap.style.marginBottom='16px';
       const h=document.createElement('h3');h.textContent='旅點智慧尋物 · 幫我找店家';wrap.appendChild(h);
       const p=document.createElement('p');p.className='muted';p.textContent='選擇清單中的商品後，才會開啟搜尋。可搜尋全球店家，實際販售與庫存請以官方資訊為準。';wrap.appendChild(p);
       const select=document.createElement('select');select.setAttribute('aria-label','選擇待購商品');select.style.maxWidth='100%';
-      const items=window.data.items.filter(x=>!x.bought&&!x.purchased);
+      const items=data.items.filter(x=>!x.bought&&!x.purchased);
       const empty=document.createElement('option');empty.value='';empty.textContent='請選擇商品';select.appendChild(empty);
       for(const x of items){const o=document.createElement('option');o.value=x.id;o.textContent=x.name||'未命名商品';select.appendChild(o)}
       wrap.appendChild(select);
