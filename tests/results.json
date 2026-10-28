@@ -1,0 +1,51 @@
+[
+  {
+    "browser": "desktop-chromium",
+    "status": "PASS",
+    "checks": [
+      "grouped pending items",
+      "accuracy/stale GPS",
+      "deduplication/reload",
+      "cooldown + exit/reentry",
+      "purchase updates",
+      "settings/stores",
+      "editor store link",
+      "feedback intercepted POST",
+      "all seven pages",
+      "responsive overflow",
+      "permission denied",
+      "distance boundary",
+      "global cross-page alert",
+      "single active watcher",
+      "background pause/resume",
+      "browser geolocation integration (emulated coordinates)"
+    ]
+  },
+  {
+    "browser": "mobile-chromium",
+    "status": "PASS",
+    "checks": [
+      "grouped pending items",
+      "accuracy/stale GPS",
+      "deduplication/reload",
+      "cooldown + exit/reentry",
+      "purchase updates",
+      "settings/stores",
+      "editor store link",
+      "feedback intercepted POST",
+      "all seven pages",
+      "responsive overflow",
+      "permission denied",
+      "distance boundary",
+      "global cross-page alert",
+      "single active watcher",
+      "background pause/resume",
+      "browser geolocation integration (emulated coordinates)"
+    ]
+  },
+  {
+    "browser": "mobile-webkit",
+    "status": "NOT RUN",
+    "reason": "WebKit binary unavailable"
+  }
+]

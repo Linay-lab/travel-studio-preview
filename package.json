@@ -1,0 +1,6 @@
+{
+  "name": "travel-studio-preview-tests",
+  "private": true,
+  "scripts": {"test": "node tests/gps-reminders.cjs"},
+  "devDependencies": {"playwright": "1.62.1"}
+}
