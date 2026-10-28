@@ -12,6 +12,7 @@ on:
         type: choice
         options: [checkout, published]
         default: checkout
+  page_build:
   workflow_run:
     workflows: ['pages build and deployment']
     types: [completed]
@@ -26,7 +27,7 @@ concurrency:
 
 jobs:
   browser-tests:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    if: (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') && (github.event_name != 'page_build' || github.event.build.status != 'errored')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
@@ -42,7 +43,7 @@ jobs:
     env:
       TEST_BROWSER: ${{ matrix.name }}
       TEST_OUTPUT_DIR: test-results
-      TEST_TARGET_URL: ${{ (github.event_name == 'workflow_run' || inputs.target == 'published') && 'https://linay-lab.github.io/travel-studio-preview/' || '' }}
+      TEST_TARGET_URL: ${{ (github.event_name == 'workflow_run' || github.event_name == 'page_build' || inputs.target == 'published') && 'https://linay-lab.github.io/travel-studio-preview/' || '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,7 +61,7 @@ jobs:
       - name: Test desktop or mobile browser
         run: npm test
       - name: Isolated concurrent browser load test
-        if: matrix.name == 'desktop-chromium' && github.event_name != 'workflow_run' && inputs.target != 'published'
+        if: matrix.name == 'desktop-chromium' && github.event_name != 'workflow_run' && github.event_name != 'page_build' && inputs.target != 'published'
         run: npm run test:load
       - name: Build combined HTML report
         if: always()
