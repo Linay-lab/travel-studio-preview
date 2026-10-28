@@ -2,7 +2,7 @@ name: Travel Studio Test Bot
 
 on:
   push:
-    branches: [main, 'test/**', 'feature/**']
+    branches: [main, 'test/**', 'feature/**', 'security/**']
   pull_request:
     branches: [main]
   workflow_dispatch:
