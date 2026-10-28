@@ -21,6 +21,11 @@ const results=[];
   await page.locator('#authRoot button[type=submit]').click();
   const check=async(name,fn)=>{try{await fn();results.push({name,status:'PASS'})}catch(e){results.push({name,status:'FAIL',error:String(e)});process.exitCode=1}};
   await check('TRIPIN 品牌與原有資料鍵值保留',async()=>{assert((await page.title()).includes('TRIPIN'));assert(html.includes("const KEY='travel_studio_beta_v3'"));assert(html.includes('id="feedback-script"'))});
+  await check('手機版底部導覽列為五個主要入口',async()=>{
+   await page.evaluate(()=>go('home'));
+   const labels=await page.locator('#bottom button').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('aria-label')));
+   assert.deepEqual(labels,['⌂ 首頁','✈ 我的旅行','▣ 購物清單','▤ 行程規劃','♙ 個人中心']);
+  });
   await check('首頁呈現所有旅行封面卡片',async()=>{
    await page.evaluate(()=>{data.trips.push({id:'t2',name:'台南旅行',country:'台灣',city:'台南',start:'2026-12-01',end:'2026-12-02'});go('home')});
    assert.equal(await page.locator('.v4-tripcard').count(),2);
