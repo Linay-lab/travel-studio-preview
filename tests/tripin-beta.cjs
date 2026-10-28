@@ -14,6 +14,11 @@ const results=[];
   await context.route('**/*',route=>route.request().url().startsWith('http://127.0.0.1:')?route.continue():route.abort());
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('http://127.0.0.1:'+server.address().port);
+  await page.evaluate(()=>authView('register'));
+  await page.locator('#authEmail').fill('tripin-beta@example.com');
+  await page.locator('#authPass').fill('test-pass-123');
+  await page.locator('#authConfirm').fill('test-pass-123');
+  await page.locator('#authRoot button[type=submit]').click();
   const check=async(name,fn)=>{try{await fn();results.push({name,status:'PASS'})}catch(e){results.push({name,status:'FAIL',error:String(e)});process.exitCode=1}};
   await check('TRIPIN 品牌與原有資料鍵值保留',async()=>{assert((await page.title()).includes('TRIPIN'));assert(html.includes("const KEY='travel_studio_beta_v3'"));assert(html.includes('id="feedback-script"'))});
   await check('首頁呈現所有旅行封面卡片',async()=>{
