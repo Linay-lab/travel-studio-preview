@@ -560,5 +560,61 @@ window.ShoppingGPS={start,stop,settings,close};
 render();
 })();
 </script>
+<script>
+/* TRIPIN: user-triggered discovery; does not claim inventory availability. */
+(function(){
+  'use strict';
+  function escT(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&quot;'}[c]));}
+  let dialog;
+  function close(){if(dialog){dialog.remove();dialog=null;}}
+  function open(itemId){
+    close();
+    const item=(window.data&&window.data.items||[]).find(x=>String(x.id)===String(itemId));
+    if(!item)return;
+    const trip=(window.data.trips||[]).find(t=>t.id===item.trip)||{};
+    dialog=document.createElement('div');dialog.className='modalwrap';dialog.setAttribute('role','presentation');
+    const panel=document.createElement('section');panel.className='modal';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label','幫我找店家');
+    panel.innerHTML='<header><h2>幫我找店家</h2><button type="button" class="btn" data-close>關閉</button></header>'+
+      '<p class="muted">只在你按下搜尋後才開啟外部地圖。搜尋結果是可能販售的店家，並不代表有現貨。</p>'+
+      '<label class="field">商品名稱<input name="product" maxlength="150"></label>'+
+      '<label class="field">目的地（國家／城市）<input name="destination" maxlength="150"></label>'+
+      '<div class="actions"><button class="btn primary" type="button" data-search>使用 Google 地圖找店家</button></div>'+
+      '<p class="muted" role="status">庫存狀態：未知。請向店家官方確認。</p>';
+    dialog.appendChild(panel);document.body.appendChild(dialog);
+    panel.querySelector('[name=product]').value=item.name||'';
+    panel.querySelector('[name=destination]').value=[trip.city||item.city,trip.country||item.country].filter(Boolean).join(' ')||'';
+    panel.querySelector('[data-close]').onclick=close;
+    dialog.addEventListener('click',e=>{if(e.target===dialog)close()});
+    panel.querySelector('[data-search]').onclick=()=>{
+      const name=panel.querySelector('[name=product]').value.trim(),place=panel.querySelector('[name=destination]').value.trim();
+      if(!name){panel.querySelector('[name=product]').focus();return;}
+      const query=[name,place,'哪裡買'].filter(Boolean).join(' ');
+      window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(query),'_blank','noopener,noreferrer');
+    };
+    panel.querySelector('[name=product]').focus();
+  }
+  function install(){
+    if(typeof window.render!=='function'||typeof window.data==='undefined')return;
+    const original=window.render;
+    window.render=function(){
+      original.apply(this,arguments);
+      if(window.page!=='shopping')return;
+      const app=document.getElementById('app');if(!app||app.querySelector('[data-tripin-find]'))return;
+      const wrap=document.createElement('div');wrap.className='panel';wrap.style.marginBottom='16px';
+      const h=document.createElement('h3');h.textContent='旅點智慧尋物 · 幫我找店家';wrap.appendChild(h);
+      const p=document.createElement('p');p.className='muted';p.textContent='選擇清單中的商品後，才會開啟搜尋。可搜尋全球店家，實際販售與庫存請以官方資訊為準。';wrap.appendChild(p);
+      const select=document.createElement('select');select.setAttribute('aria-label','選擇待購商品');select.style.maxWidth='100%';
+      const items=window.data.items.filter(x=>!x.bought&&!x.purchased);
+      const empty=document.createElement('option');empty.value='';empty.textContent='請選擇商品';select.appendChild(empty);
+      for(const x of items){const o=document.createElement('option');o.value=x.id;o.textContent=x.name||'未命名商品';select.appendChild(o)}
+      wrap.appendChild(select);
+      const btn=document.createElement('button');btn.className='btn primary';btn.style.marginLeft='8px';btn.dataset.tripinFind='';btn.textContent='幫我找店家';btn.onclick=()=>{if(select.value)open(select.value);else select.focus()};wrap.appendChild(btn);
+      app.prepend(wrap);
+    };
+    window.render();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script>
 </body></html>
 
