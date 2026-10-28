@@ -593,10 +593,44 @@ render();
       '<label class="field">商品名稱<input name="product" maxlength="150"></label>'+
       '<label class="field">目的地（國家／城市）<input name="destination" maxlength="150"></label>'+
       '<div class="actions"><button class="btn primary" type="button" data-search>使用 Google 地圖找店家</button></div>'+
-      '<p class="muted" role="status">庫存狀態：未知。請向店家官方確認。</p>';
+      '<p class="muted" role="status">庫存狀態：未知。請向店家官方確認。</p>'+
+      '<hr><h3>選好分店後，建立 GPS 提醒</h3>'+
+      '<p class="muted">從地圖複製確切分店的經緯度。僅輸入店名無法準確提醒；同一分店可連結多個商品。</p>'+
+      '<label class="field">分店名稱<input name="storeName" maxlength="120" placeholder="例如：御菓子御殿 國際通店"></label>'+
+      '<div class="two"><label class="field">緯度<input name="storeLat" type="number" step="any" min="-90" max="90" placeholder="26.214"></label><label class="field">經度<input name="storeLng" type="number" step="any" min="-180" max="180" placeholder="127.68"></label></div>'+
+      '<label class="field">或選擇已儲存分店<select name="existingStore"><option value="">新增分店／不選擇</option></select></label>'+
+      '<div class="actions"><button class="btn primary" type="button" data-link-store>儲存並連結 GPS 提醒</button></div>'+
+      '<p role="status" data-store-status></p>';
     dialog.appendChild(panel);document.body.appendChild(dialog);
     panel.querySelector('[name=product]').value=item.name||'';
     panel.querySelector('[name=destination]').value=[trip.city||item.city,trip.country||item.country].filter(Boolean).join(' ')||'';
+    const stores=Array.isArray(data.shoppingPlaces)?data.shoppingPlaces:[];
+    const existing=panel.querySelector('[name=existingStore]');
+    for(const store of stores){if(!store||!store.id)continue;const option=document.createElement('option');option.value=store.id;option.textContent=store.name||'未命名分店';existing.appendChild(option)}
+    panel.querySelector('[data-link-store]').onclick=()=>{
+      const status=panel.querySelector('[data-store-status]');
+      if(dataLoadFailed){status.textContent='原始資料無法讀取，暫時不能修改。';return}
+      const existingId=existing.value;
+      let store=stores.find(x=>x.id===existingId);
+      let added=false;
+      const previousStores=data.shoppingPlaces;
+      const previousId=item.shoppingPlaceId;
+      if(!store){
+        const name=panel.querySelector('[name=storeName]').value.trim();
+        const latText=panel.querySelector('[name=storeLat]').value.trim();
+        const lngText=panel.querySelector('[name=storeLng]').value.trim();
+        const lat=Number(latText),lng=Number(lngText);
+        if(!name||!latText||!lngText||!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180){status.textContent='請輸入分店名稱及有效的緯度、經度，或選擇已儲存分店。';return}
+        store=stores.find(x=>x.name===name&&Number(x.lat)===lat&&Number(x.lng)===lng);
+        if(!store){store={id:uid(),name,lat,lng};data.shoppingPlaces=[...stores,store];added=true}
+      }
+      item.shoppingPlaceId=store.id;
+      if(!save()){item.shoppingPlaceId=previousId;data.shoppingPlaces=previousStores;status.textContent='儲存失敗，資料未更動。';return}
+      status.textContent='已連結 '+store.name+'。啟用 GPS 提醒後，靠近分店會提醒未購商品。';
+      if(added){const option=document.createElement('option');option.value=store.id;option.textContent=store.name;existing.appendChild(option)}
+      existing.value=store.id;
+      render();
+    };
     panel.querySelector('[data-close]').onclick=close;
     dialog.addEventListener('click',e=>{if(e.target===dialog)close()});
     panel.querySelector('[data-search]').onclick=()=>{
@@ -618,7 +652,7 @@ render();
       const h=document.createElement('h3');h.textContent='旅點智慧尋物 · 幫我找店家';wrap.appendChild(h);
       const p=document.createElement('p');p.className='muted';p.textContent='選擇清單中的商品後，才會開啟搜尋。可搜尋全球店家，實際販售與庫存請以官方資訊為準。';wrap.appendChild(p);
       const select=document.createElement('select');select.setAttribute('aria-label','選擇待購商品');select.style.maxWidth='100%';
-      const items=data.items.filter(x=>!x.bought&&!x.purchased);
+      const items=data.items.filter(x=>x.type==='商品'&&!x.bought);
       const empty=document.createElement('option');empty.value='';empty.textContent='請選擇商品';select.appendChild(empty);
       for(const x of items){const o=document.createElement('option');o.value=x.id;o.textContent=x.name||'未命名商品';select.appendChild(o)}
       wrap.appendChild(select);
