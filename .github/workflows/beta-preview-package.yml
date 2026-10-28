@@ -1,0 +1,39 @@
+name: TRIPIN Beta Preview Package
+
+on:
+  push:
+    branches: ['feature/tripin-global-smart-shopping']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check preview source
+        run: |
+          test -s index.html
+          grep -q 'TRIPIN' index.html
+      - name: Prepare offline preview
+        run: |
+          mkdir -p tripin-beta-preview
+          cp index.html tripin-beta-preview/index.html
+          cat > tripin-beta-preview/使用說明.txt <<'EOF'
+TRIPIN Beta 預覽包
+1. 開啟 index.html 可先檢視畫面與一般功能。
+2. GPS 定位需要 HTTPS 或 localhost；直接雙擊檔案不保證能使用 GPS。
+3. 這是獨立 Beta 測試包，不會更新正式網站。
+4. 資料儲存在此瀏覽器的本機儲存空間，尚非雲端多人同步版。
+5. Google Apps Script 回饋功能可能連接真實端點，請勿提交測試訊息。
+EOF
+      - name: Upload preview package
+        uses: actions/upload-artifact@v4
+        with:
+          name: tripin-beta-preview
+          path: tripin-beta-preview/
+          retention-days: 30
