@@ -452,9 +452,9 @@ authView();
  window.exportFeedback=function(){
   const list=getItems();
   if(!list.length){alert('目前還沒有回饋可以匯出');return}
-  const blob=new Blob([JSON.stringify({app:'旅點 TRIPIN',version:'V18',exportedAt:new Date().toISOString(),feedback:list},null,2)],{type:'application/json;charset=utf-8'});
+  const blob=new Blob([JSON.stringify({app:'旅購 Travel Studio',version:'V18',exportedAt:new Date().toISOString(),feedback:list},null,2)],{type:'application/json;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='旅點_測試回饋_'+new Date().toISOString().slice(0,10)+'.json';
+  a.href=url;a.download='旅購_測試回饋_'+new Date().toISOString().slice(0,10)+'.json';
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
  };
  window.refreshFeedback=function(){
