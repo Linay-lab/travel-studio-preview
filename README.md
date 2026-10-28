@@ -12,3 +12,7 @@
 - [本次測試結果](tests/results.json)
 
 本版僅在網頁前景定位；手機鎖屏或關閉後的背景提醒尚未實作。手機尺寸 Chromium 已測試，Safari／WebKit 與實體手機 GPS 尚未驗證。Google Apps Script 回饋程式保留，測試請求已攔截，未寄出測試信。
+
+## 自動測試機器人
+
+[操作說明](docs/TEST-BOT.md)：更新程式、提出 PR 或 Pages 發布成功後自動測試；也可在 GitHub Actions 手動執行，下載 HTML 報告及截圖。
